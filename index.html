@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Neerav Jha — Software Engineer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --ink: #0b0f17;
+    --ink-2: #0e1420;
+    --panel: #121a29;
+    --panel-2: #16203273;
+    --line: #223049;
+    --text: #e9edf5;
+    --muted: #8a94a8;
+    --faint: #5b6579;
+    --amber: #f0a03c;
+    --amber-soft: #f0a03c2b;
+    --teal: #5fd4c4;
+    --teal-soft: #5fd4c422;
+    --serif: "Charter", "Georgia", "Times New Roman", serif;
+    --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: ui-monospace, "SF Mono", "Menlo", "Consolas", monospace;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: var(--ink);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 16.5px;
+    line-height: 1.65;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection { background: var(--amber); color: var(--ink); }
+  a { color: inherit; text-decoration: none; }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  #mesh {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.85;
+  }
+  .grain {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+      radial-gradient(1100px 600px at 78% -8%, #f0a03c14, transparent 60%),
+      radial-gradient(900px 700px at -10% 45%, #5fd4c40d, transparent 55%),
+      radial-gradient(1000px 800px at 50% 115%, #1a2a4a66, transparent 60%);
+  }
+  .wrap { position: relative; z-index: 2; }
+  .shell { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
+
+  /* ---------- nav ---------- */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 50;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    background: #0b0f17cc;
+    border-bottom: 1px solid #22304955;
+  }
+  .nav-in {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 14px 28px;
+    display: flex;
+    align-items: center;
+    gap: 28px;
+  }
+  .brand {
+    font-family: var(--mono);
+    font-size: 15px;
+    color: var(--amber);
+    letter-spacing: 0.04em;
+  }
+  .brand b { color: var(--text); font-weight: 600; }
+  .nav-links {
+    display: flex;
+    gap: 22px;
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.08em;
+  }
+  .nav-links a { color: var(--muted); transition: color 0.25s; }
+  .nav-links a:hover { color: var(--amber); }
+  .nav-cta {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    background: var(--amber);
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 600;
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+  .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 6px 22px #f0a03c55; }
+  @media (max-width: 760px) { .nav-links { display: none; } .nav-cta { margin-left: auto; } }
+
+  /* ---------- hero ---------- */
+  .hero {
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    padding: 120px 0 70px;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 56px;
+    align-items: center;
+    width: 100%;
+  }
+  @media (max-width: 940px) { .hero-grid { grid-template-columns: 1fr; gap: 44px; } }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 13px;
+    letter-spacing: 0.14em;
+    color: var(--teal);
+    margin-bottom: 22px;
+    min-height: 1.4em;
+  }
+  .eyebrow .caret {
+    display: inline-block;
+    width: 8px; height: 15px;
+    background: var(--teal);
+    vertical-align: -2px;
+    margin-left: 3px;
+    animation: blink 1s steps(1) infinite;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  h1.name {
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: clamp(52px, 8.2vw, 104px);
+    line-height: 0.98;
+    letter-spacing: -0.015em;
+    text-wrap: balance;
+  }
+  h1.name .ln { display: block; overflow: hidden; }
+  h1.name .ln > span {
+    display: block;
+    transform: translateY(110%);
+    animation: rise 0.9s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+  }
+  h1.name .ln:nth-child(2) > span { animation-delay: 0.12s; color: var(--amber); font-style: italic; }
+  @keyframes rise { to { transform: translateY(0); } }
+
+  .hero-sub {
+    margin-top: 26px;
+    max-width: 54ch;
+    color: var(--muted);
+    font-size: 18px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.5s forwards;
+  }
+  .hero-sub b { color: var(--text); font-weight: 600; }
+  .hero-sub .hl { color: var(--teal); }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+  .hero-ctas {
+    display: flex;
+    gap: 14px;
+    margin-top: 34px;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.7s forwards;
+  }
+  .btn {
+    font-family: var(--mono);
+    font-size: 13.5px;
+    letter-spacing: 0.05em;
+    padding: 13px 24px;
+    border-radius: 5px;
+    border: 1px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    transition: transform 0.22s, box-shadow 0.22s, background 0.22s, border-color 0.22s;
+  }
+  .btn-amber { background: var(--amber); color: #14100a; font-weight: 700; }
+  .btn-amber:hover { transform: translateY(-2px); box-shadow: 0 10px 32px #f0a03c4d; }
+  .btn-ghost { border-color: var(--line); color: var(--text); }
+  .btn-ghost:hover { border-color: var(--teal); color: var(--teal); transform: translateY(-2px); }
+
+  .hero-meta {
+    margin-top: 40px;
+    display: flex;
+    gap: 28px;
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    color: var(--faint);
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: fadeUp 0.8s ease 0.9s forwards;
+  }
+  .hero-meta span::before { content: "// "; color: var(--amber); }
+
+  /* terminal */
+  .term {
+    background: linear-gradient(160deg, #101827, #0c111c);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    box-shadow: 0 30px 80px #00000080, 0 0 0 1px #ffffff08 inset;
+    overflow: hidden;
+    opacity: 0;
+    animation: termIn 1s cubic-bezier(0.19, 1, 0.22, 1) 0.55s forwards;
+  }
+  @keyframes termIn { from { opacity: 0; transform: translateY(28px) scale(0.97); } to { opacity: 1; transform: none; } }
+  .term-bar {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #22304966;
+    background: #0d1420;
+  }
+  .dot { width: 11px; height: 11px; border-radius: 50%; }
+  .dot:nth-child(1) { background: #ff5f57; }
+  .dot:nth-child(2) { background: #febc2e; }
+  .dot:nth-child(3) { background: #28c840; }
+  .term-title {
+    margin-left: 10px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--faint);
+    letter-spacing: 0.06em;
+  }
+  .term-body {
+    padding: 20px 20px 24px;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.85;
+    min-height: 300px;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+  .t-prompt { color: var(--amber); }
+  .t-cmd { color: var(--text); }
+  .t-ok { color: var(--teal); }
+  .t-dim { color: var(--faint); }
+  .t-caret {
+    display: inline-block;
+    width: 8px; height: 14px;
+    background: var(--amber);
+    vertical-align: -2px;
+    animation: blink 1s steps(1) infinite;
+  }
+
+  /* ---------- metrics strip ---------- */
+  .metrics {
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    background: #0d131fa6;
+  }
+  .metrics-in {
+    max-width: 1180px;
+    margin: 0 auto;
+    padding: 0 28px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+  @media (max-width: 860px) { .metrics-in { grid-template-columns: repeat(2, 1fr); } }
+  .metric {
+    padding: 34px 26px;
+    border-left: 1px solid var(--line);
+  }
+  .metric:first-child { border-left: none; }
+  @media (max-width: 860px) { .metric:nth-child(3) { border-left: none; } .metric { border-top: 1px solid var(--line); } .metric:nth-child(-n+2) { border-top: none; } }
+  .metric .num {
+    font-family: var(--serif);
+    font-size: clamp(34px, 4vw, 46px);
+    font-weight: 700;
+    color: var(--text);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+  .metric .num em { font-style: normal; color: var(--amber); font-size: 0.55em; margin-left: 2px; }
+  .metric .lbl {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    color: var(--muted);
+    margin-top: 8px;
+    text-transform: uppercase;
+  }
+
+  /* ---------- sections ---------- */
+  section { padding: 110px 0 30px; }
+  .sec-head { display: flex; align-items: baseline; gap: 20px; margin-bottom: 56px; }
+  .sec-idx {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--amber);
+    letter-spacing: 0.1em;
+  }
+  h2 {
+    font-family: var(--serif);
+    font-size: clamp(34px, 4.6vw, 54px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+  }
+  h2 em { font-style: italic; color: var(--amber); }
+  .sec-rule { flex: 1; height: 1px; background: var(--line); align-self: center; }
+
+  .reveal { opacity: 0; transform: translateY(30px); transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.19, 1, 0.22, 1); }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ---------- experience ---------- */
+  .xp { position: relative; padding-left: 40px; }
+  .xp::before {
+    content: "";
+    position: absolute;
+    left: 7px; top: 8px; bottom: 8px;
+    width: 1px;
+    background: var(--line);
+  }
+  .xp-line {
+    position: absolute;
+    left: 7px; top: 8px;
+    width: 1px;
+    height: 0;
+    background: linear-gradient(var(--amber), var(--teal));
+    transition: height 1.6s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .xp.in .xp-line { height: calc(100% - 16px); }
+  .xp-item { position: relative; padding-bottom: 64px; }
+  .xp-item:last-child { padding-bottom: 12px; }
+  .xp-item::before {
+    content: "";
+    position: absolute;
+    left: -37px; top: 9px;
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--ink);
+    border: 2px solid var(--amber);
+    box-shadow: 0 0 0 5px #f0a03c1a;
+  }
+  .xp-top { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; }
+  .xp-role { font-family: var(--serif); font-size: 26px; font-weight: 700; }
+  .xp-co { color: var(--teal); font-family: var(--mono); font-size: 14px; }
+  .xp-when {
+    margin-left: auto;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--faint);
+    letter-spacing: 0.06em;
+  }
+  .xp-badge {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    color: var(--amber);
+    border: 1px solid #f0a03c55;
+    background: var(--amber-soft);
+    padding: 3px 10px;
+    border-radius: 99px;
+    margin-top: 10px;
+  }
+  .xp ul { margin-top: 16px; list-style: none; max-width: 74ch; }
+  .xp li {
+    color: var(--muted);
+    padding-left: 22px;
+    position: relative;
+    margin-bottom: 9px;
+  }
+  .xp li::before { content: "▸"; position: absolute; left: 0; color: var(--amber); font-size: 12px; top: 3px; }
+  .xp li b { color: var(--text); font-weight: 600; }
+
+  /* ---------- projects ---------- */
+  .proj {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    overflow: hidden;
+    background: linear-gradient(170deg, #111a2b, #0d1320);
+    margin-bottom: 40px;
+    position: relative;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s, border-color 0.35s;
+  }
+  .proj:hover { transform: translateY(-6px); border-color: #f0a03c66; box-shadow: 0 26px 70px #00000073, 0 0 44px #f0a03c14; }
+  @media (max-width: 900px) { .proj { grid-template-columns: 1fr; } }
+  .proj-info { padding: 44px 44px 40px; }
+  @media (max-width: 600px) { .proj-info { padding: 30px 24px; } }
+  .proj-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--teal);
+    text-transform: uppercase;
+  }
+  .proj h3 { font-family: var(--serif); font-size: clamp(26px, 3vw, 34px); font-weight: 700; margin: 10px 0 6px; }
+  .proj h3 .amp { color: var(--amber); }
+  .proj-stack { font-family: var(--mono); font-size: 12px; color: var(--faint); margin-bottom: 18px; }
+  .proj p { color: var(--muted); max-width: 58ch; }
+  .proj p b { color: var(--text); font-weight: 600; }
+  .proj-points { list-style: none; margin-top: 16px; }
+  .proj-points li { color: var(--muted); padding-left: 20px; position: relative; margin-bottom: 8px; font-size: 15px; }
+  .proj-points li::before { content: "＋"; position: absolute; left: 0; color: var(--teal); font-size: 11px; top: 4px; }
+  .proj-points li b { color: var(--text); }
+  .proj-links { display: flex; gap: 18px; margin-top: 26px; flex-wrap: wrap; }
+  .plink {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.05em;
+    color: var(--amber);
+    border-bottom: 1px solid #f0a03c44;
+    padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .plink:hover { color: var(--teal); border-color: var(--teal); }
+  .proj-note {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--faint);
+    letter-spacing: 0.04em;
+    margin-top: 14px;
+  }
+
+  .proj-visual {
+    background: #0a0f19;
+    border-left: 1px solid var(--line);
+    padding: 44px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 26px;
+  }
+  @media (max-width: 900px) { .proj-visual { border-left: none; border-top: 1px solid var(--line); } }
+
+  .bar-row { }
+  .bar-lbl {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    margin-bottom: 7px;
+  }
+  .bar-lbl .v { color: var(--text); font-variant-numeric: tabular-nums; }
+  .bar-track { height: 12px; background: #16203a; border-radius: 99px; overflow: hidden; }
+  .bar-fill { height: 100%; width: 0; border-radius: 99px; transition: width 1.4s cubic-bezier(0.22, 1, 0.36, 1); }
+  .bar-before .bar-fill { background: linear-gradient(90deg, #6b7691, #8a94a8); }
+  .bar-after .bar-fill { background: linear-gradient(90deg, var(--teal), #8ef0e2); box-shadow: 0 0 18px #5fd4c455; }
+  .bar-note {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--teal);
+    text-align: right;
+  }
+  .bar-note b { color: var(--text); }
+
+  .vshot {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 2.05;
+    color: var(--muted);
+    background: #0d1524;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 22px 24px;
+    overflow-x: auto;
+    white-space: pre-wrap;
+  }
+  .vshot .g { color: var(--teal); }
+  .vshot .a { color: var(--amber); }
+  .vshot .w { color: var(--text); }
+  .vshot .d { color: var(--faint); }
+
+  /* ---------- skills ---------- */
+  .marquee {
+    overflow: hidden;
+    border-top: 1px solid var(--line);
+    border-bottom: 1px solid var(--line);
+    padding: 20px 0;
+    margin-bottom: 60px;
+    mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent);
+  }
+  .marquee-track {
+    display: flex;
+    gap: 48px;
+    width: max-content;
+    animation: scroll 30s linear infinite;
+    font-family: var(--serif);
+    font-size: 26px;
+    font-style: italic;
+    color: var(--faint);
+    white-space: nowrap;
+  }
+  .marquee-track span b { color: var(--amber); font-style: normal; font-family: var(--mono); font-size: 15px; vertical-align: 4px; margin-right: 46px; }
+  @keyframes scroll { to { transform: translateX(-50%); } }
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+
+  .skill-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+  }
+  @media (max-width: 980px) { .skill-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 560px) { .skill-grid { grid-template-columns: 1fr; } }
+  .skill-card {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 26px 24px;
+    background: #0e1522a6;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+  .skill-card:hover { transform: translateY(-4px); border-color: #5fd4c466; }
+  .skill-card h4 {
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--teal);
+    margin-bottom: 16px;
+  }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--muted);
+    border: 1px solid var(--line);
+    padding: 5px 11px;
+    border-radius: 99px;
+    transition: color 0.2s, border-color 0.2s, background 0.2s;
+  }
+  .chip:hover { color: var(--amber); border-color: #f0a03c66; background: var(--amber-soft); }
+
+  /* ---------- proof / education ---------- */
+  .duo { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 22px; }
+  @media (max-width: 900px) { .duo { grid-template-columns: 1fr; } }
+  .panel {
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: linear-gradient(170deg, #111a2b, #0d1320);
+    padding: 40px 38px;
+  }
+  .panel h3 { font-family: var(--serif); font-size: 26px; font-weight: 700; margin-bottom: 20px; }
+  .proof-row {
+    display: flex;
+    align-items: baseline;
+    gap: 18px;
+    padding: 16px 0;
+    border-bottom: 1px dashed #22304988;
+  }
+  .proof-row:last-child { border-bottom: none; }
+  .proof-num {
+    font-family: var(--serif);
+    font-size: 32px;
+    font-weight: 700;
+    color: var(--amber);
+    min-width: 118px;
+    font-variant-numeric: tabular-nums;
+  }
+  .proof-txt { color: var(--muted); }
+  .proof-txt b { color: var(--text); }
+  .edu-deg { color: var(--text); font-weight: 600; font-size: 17px; }
+  .edu-line { color: var(--muted); margin-top: 6px; }
+  .edu-meta { font-family: var(--mono); font-size: 12px; color: var(--faint); margin-top: 14px; letter-spacing: 0.06em; }
+  .gpa {
+    display: inline-block;
+    margin-top: 20px;
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--teal);
+    border: 1px solid #5fd4c455;
+    background: var(--teal-soft);
+    padding: 6px 14px;
+    border-radius: 99px;
+  }
+
+  /* ---------- contact ---------- */
+  .contact { padding: 130px 0 60px; text-align: center; }
+  .contact .eyebrow { justify-content: center; }
+  .mail {
+    display: inline-block;
+    font-family: var(--serif);
+    font-weight: 700;
+    font-size: clamp(26px, 5.4vw, 62px);
+    letter-spacing: -0.01em;
+    margin-top: 18px;
+    background: linear-gradient(92deg, var(--text) 30%, var(--amber) 55%, var(--teal) 80%);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 6s linear infinite;
+    word-break: break-all;
+  }
+  @keyframes shimmer { to { background-position: -200% 0; } }
+  .contact-sub { color: var(--muted); margin-top: 22px; max-width: 52ch; margin-left: auto; margin-right: auto; }
+  .contact-links { display: flex; gap: 16px; justify-content: center; margin-top: 36px; flex-wrap: wrap; }
+
+  footer {
+    border-top: 1px solid var(--line);
+    margin-top: 90px;
+    padding: 26px 0;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--faint);
+    letter-spacing: 0.06em;
+  }
+  .foot-in { max-width: 1180px; margin: 0 auto; padding: 0 28px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+
+  /* ---------- toast ---------- */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 34px;
+    transform: translate(-50%, 18px);
+    z-index: 99;
+    background: #121a29;
+    border: 1px solid #5fd4c488;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12.5px;
+    letter-spacing: 0.05em;
+    padding: 13px 22px;
+    border-radius: 8px;
+    box-shadow: 0 14px 44px #000000aa;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+    max-width: calc(100vw - 40px);
+    text-align: center;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  .toast b { color: var(--teal); }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1; transform: none; }
+    .marquee-track { animation: none; }
+  }
+</style>
+
+<canvas id="mesh"></canvas>
+<div class="grain"></div>
+
+<div class="wrap">
+  <nav>
+    <div class="nav-in">
+      <a class="brand" href="#top"><b>neerav</b>@jha:<span style="color:var(--teal)">~</span>$</a>
+      <div class="nav-links">
+        <a href="#work">WORK</a>
+        <a href="#projects">PROJECTS</a>
+        <a href="#skills">SKILLS</a>
+        <a href="#proof">PROOF</a>
+        <a href="https://drive.google.com/file/d/1h-w5dZftKcPxryhzdudBlT-FsQ2AFgkQ/view" target="_blank" rel="noopener" style="color:var(--teal)">RESUME ↗</a>
+      </div>
+      <a class="nav-cta mailme" href="mailto:neeravjha444@gmail.com?subject=Opportunity%20for%20Neerav%20%E2%80%94%20%5BCompany%20%2F%20Role%5D&amp;body=Hi%20Neerav%2C%0A%0ACame%20across%20your%20portfolio%20and%20would%20love%20to%20talk%20about%20a%20role%20at%20%5BCompany%5D.%0A%0A">HIRE ME →</a>
+    </div>
+  </nav>
+
+  <header class="hero shell" id="top">
+    <div class="hero-grid">
+      <div>
+        <p class="eyebrow"><span id="typed"></span><span class="caret"></span></p>
+        <h1 class="name">
+          <span class="ln"><span>Neerav</span></span>
+          <span class="ln"><span>Jha.</span></span>
+        </h1>
+        <p class="hero-sub">
+          Software Engineer at <b>Yellow.ai</b> building <b>LLM-orchestrated conversational AI</b>
+          at enterprise scale — RAG pipelines, function-calling orchestration, and resilient APIs.
+          I find production bottlenecks and kill them: <span class="hl">3.8s → 473ms</span> on my last one.
+        </p>
+        <div class="hero-ctas">
+          <a class="btn btn-amber mailme" href="mailto:neeravjha444@gmail.com?subject=Opportunity%20for%20Neerav%20%E2%80%94%20%5BCompany%20%2F%20Role%5D&amp;body=Hi%20Neerav%2C%0A%0ACame%20across%20your%20portfolio%20and%20would%20love%20to%20talk%20about%20a%20role%20at%20%5BCompany%5D.%0A%0A">✉ &nbsp;Get in touch</a>
+          <a class="btn btn-ghost" href="https://drive.google.com/file/d/1h-w5dZftKcPxryhzdudBlT-FsQ2AFgkQ/view" target="_blank" rel="noopener">↓ &nbsp;Resume</a>
+          <a class="btn btn-ghost" href="https://github.com/neerav34" target="_blank" rel="noopener">⌥ &nbsp;github/neerav34</a>
+        </div>
+        <div class="hero-meta">
+          <span>Noida, India</span>
+          <span>open to SWE / SDE roles</span>
+          <span>ships to npm &amp; production</span>
+        </div>
+      </div>
+      <div class="term" aria-label="Terminal demo of Neerav's projects">
+        <div class="term-bar">
+          <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+          <span class="term-title">neerav — zsh — things I actually shipped</span>
+        </div>
+        <div class="term-body" id="termBody"></div>
+      </div>
+    </div>
+  </header>
+
+  <div class="metrics">
+    <div class="metrics-in">
+      <div class="metric">
+        <div class="num"><span class="count" data-to="473">0</span><em>ms</em></div>
+        <div class="lbl">cache-hit p50 after perf fix</div>
+      </div>
+      <div class="metric">
+        <div class="num"><span class="count" data-to="5.4" data-dec="1">0</span><em>×</em></div>
+        <div class="lbl">throughput gain · 1.9 → 10.3 req/s</div>
+      </div>
+      <div class="metric">
+        <div class="num"><span class="count" data-to="1100">0</span><em>+</em></div>
+        <div class="lbl">LeetCode problems solved</div>
+      </div>
+      <div class="metric">
+        <div class="num"><span class="count" data-to="1500">0</span><em>+</em></div>
+        <div class="lbl">npm downloads · env-doctor</div>
+      </div>
+    </div>
+  </div>
+
+  <section class="shell" id="work">
+    <div class="sec-head reveal">
+      <span class="sec-idx">01</span>
+      <h2>Where I've <em>worked</em></h2>
+      <span class="sec-rule"></span>
+    </div>
+
+    <div class="xp reveal" id="xpWrap">
+      <div class="xp-line"></div>
+
+      <div class="xp-item">
+        <div class="xp-top">
+          <span class="xp-role">Associate Software Engineer</span>
+          <span class="xp-co">Yellow.ai</span>
+          <span class="xp-when">SEP 2024 — PRESENT · BANGALORE</span>
+        </div>
+        <span class="xp-badge">PROMOTED FROM INTERN · MAR 2025</span>
+        <ul>
+          <li>Built and productionized <b>multi-channel conversational AI</b> (chat &amp; voice) using RAG pipelines and LLM orchestration — function calling, tool routing, caching — improving response latency and containment rate.</li>
+          <li>Designed and shipped the platform's <b>first ServiceNow integration</b> (OAuth 2.0, event-driven sync, resilient REST APIs), improving API reliability and throughput while reducing mean time to recovery.</li>
+          <li>Added <b>performance instrumentation</b> across orchestration services to surface latency and reliability regressions before they hit customers.</li>
+        </ul>
+      </div>
+
+      <div class="xp-item">
+        <div class="xp-top">
+          <span class="xp-role">Python Developer Intern</span>
+          <span class="xp-co">Munsow Technologies</span>
+          <span class="xp-when">JUN 2024 — NOV 2024 · REMOTE</span>
+        </div>
+        <ul>
+          <li>Built backend services (<b>Flask, MongoDB</b>) for an AI-powered flashcard learning platform, integrating the OpenAI API for automated content generation.</li>
+          <li>Implemented <b>RBAC and RESTful APIs</b> supporting <b>1,000+ registered users</b> and 150+ concurrent sessions.</li>
+        </ul>
+      </div>
+
+      <div class="xp-item">
+        <div class="xp-top">
+          <span class="xp-role">Data &amp; Machine Learning Intern</span>
+          <span class="xp-co">NIELIT</span>
+          <span class="xp-when">JUN 2023 — AUG 2023 · HARIDWAR</span>
+        </div>
+        <ul>
+          <li>Developed classification models in Python achieving <b>~80% prediction accuracy</b>; optimized MySQL/Oracle queries on <b>1TB+ datasets</b>, improving execution efficiency by ~40%.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell" id="projects">
+    <div class="sec-head reveal">
+      <span class="sec-idx">02</span>
+      <h2>Things I've <em>shipped</em></h2>
+      <span class="sec-rule"></span>
+    </div>
+
+    <article class="proj reveal">
+      <div class="proj-info">
+        <span class="proj-tag">Featured · Live in production</span>
+        <h3>LLM Gateway</h3>
+        <div class="proj-stack">Python · FastAPI · Redis · Vector DB · SQLite · SSE</div>
+        <p>An <b>OpenAI-compatible multi-provider routing gateway</b> with automatic failover, two-layer caching, rate limiting, and cost tracking — deployed and load-tested on real infrastructure.</p>
+        <ul class="proj-points">
+          <li><b>Semantic caching</b> — embeddings + cosine similarity with a threshold calibrated from measured data (paraphrases ~0.89–0.92 vs unrelated ~0.56), serving cached answers for reworded prompts.</li>
+          <li><b>Diagnosed a connection-pooling bottleneck</b> (per-request TLS handshakes) — p50 latency 3.8s → 473ms, sustained throughput 1.9 → 10.3 req/s.</li>
+          <li>Sliding-window rate limiting and streaming with pre-first-byte provider fallback.</li>
+        </ul>
+        <div class="proj-links">
+          <a class="plink" href="https://github.com/neerav34/llm-gateway" target="_blank" rel="noopener">GitHub ↗</a>
+          <a class="plink" href="https://llm-gateway-rb0k.onrender.com" target="_blank" rel="noopener">Live API ↗</a>
+          <a class="plink" href="https://youtu.be/9BZbCSWbZqM" target="_blank" rel="noopener">Demo video ↗</a>
+        </div>
+        <div class="proj-note">※ free-tier hosting sleeps when idle — first request may take ~30s to wake</div>
+      </div>
+      <div class="proj-visual" id="latencyViz">
+        <div class="bar-row bar-before">
+          <div class="bar-lbl"><span>p50 · before</span><span class="v">3,802 ms</span></div>
+          <div class="bar-track"><div class="bar-fill" data-w="100"></div></div>
+        </div>
+        <div class="bar-row bar-after">
+          <div class="bar-lbl"><span>p50 · after pooling fix</span><span class="v">473 ms</span></div>
+          <div class="bar-track"><div class="bar-fill" data-w="12.4"></div></div>
+        </div>
+        <div class="bar-note"><b>−87%</b> latency · one commit</div>
+        <div class="vshot">$ <span class="w">python scripts/loadtest.py</span>
+<span class="d">──────────────────────────────</span>
+<span class="g">✔</span> p50 <span class="w">473ms</span> · p95 <span class="w">520ms</span> · p99 <span class="w">925ms</span>
+<span class="g">✔</span> throughput <span class="w">10.3 req/s</span> <span class="d">@ c=10</span>
+<span class="a">→</span> X-Cache: <span class="g">SEMANTIC-HIT</span> <span class="d">(sim 0.93)</span></div>
+      </div>
+    </article>
+
+    <article class="proj reveal">
+      <div class="proj-info">
+        <span class="proj-tag">Distributed systems · Live in production</span>
+        <h3>taskq</h3>
+        <div class="proj-stack">Python · FastAPI · Redis · Distributed Workers</div>
+        <p>A <b>distributed task queue</b> — the same problem category as Celery, SQS, and BullMQ. Any app enqueues background jobs over HTTP; a pool of workers processes them reliably, <b>even when a worker is killed mid-job</b>.</p>
+        <ul class="proj-points">
+          <li><b>Dead-worker rescue</b> — job leasing with Redis TTL heartbeats: <b>kill -9</b> a worker mid-job and another completes it within seconds; atomic claims prevent double-rescue.</li>
+          <li><b>Real failure handling</b> — idempotent enqueue (SET NX), exponential-backoff retries into a dead-letter queue, priority scheduling, and backpressure (503 + Retry-After at queue-depth caps).</li>
+          <li>Load-tested at <b>~520 req/s enqueue, p50 28 ms</b> locally — with honestly documented at-least-once semantics and known gaps, like a real system.</li>
+        </ul>
+        <div class="proj-links">
+          <a class="plink" href="https://github.com/neerav34/taskq" target="_blank" rel="noopener">GitHub ↗</a>
+          <a class="plink" href="https://taskq-api-8orl.onrender.com/docs" target="_blank" rel="noopener">Live API ↗</a>
+          <a class="plink" href="https://taskq-api-8orl.onrender.com/dashboard" target="_blank" rel="noopener">Live dashboard ↗</a>
+        </div>
+        <div class="proj-note">※ free-tier hosting sleeps when idle — first request may take ~30s to wake</div>
+      </div>
+      <div class="proj-visual">
+        <div class="vshot">$ <span class="w">kill -9 $(pgrep -f worker-1)</span>   <span class="d"># mid-job</span>
+
+<span class="d">lease:job_8f2 expired · no heartbeat</span>
+<span class="a">→</span> orphan detected · re-queued
+<span class="g">✔</span> rescued by <span class="w">worker-2</span> · completed <span class="d">(3.1s)</span>
+<span class="d">──────────────────────────────</span>
+$ <span class="w">python -m loadtest.enqueue_load</span>
+<span class="g">✔</span> <span class="w">520 req/s</span> · p50 <span class="w">28ms</span> · p99 <span class="w">202ms</span>
+<span class="g">✔</span> 500/500 accepted · <span class="w">0 jobs lost</span></div>
+      </div>
+    </article>
+
+    <article class="proj reveal">
+      <div class="proj-info">
+        <span class="proj-tag">Open source · 1,500+ downloads on npm</span>
+        <h3>env-doctor</h3>
+        <div class="proj-stack">Node.js · CLI · GitHub Action · Vercel</div>
+        <p><b>"The ESLint of environment variables"</b> — a CLI that catches missing and undocumented env vars before they hit production. Published on npm as <b>@neerav34/env-doctor</b>, currently at v1.0.10.</p>
+        <ul class="proj-points">
+          <li>A full <b>product surface</b>, not just a script: npm package, GitHub Action for CI, VS Code extension, and a landing page.</li>
+          <li>Monorepo support, destructuring detection (<b>const &#123; VAR &#125; = process.env</b>), commented-code false-positive fixes — shipped across 10 releases.</li>
+        </ul>
+        <div class="proj-links">
+          <a class="plink" href="https://www.npmjs.com/package/@neerav34/env-doctor" target="_blank" rel="noopener">npm ↗</a>
+          <a class="plink" href="https://github.com/neerav34/env-doctor" target="_blank" rel="noopener">GitHub ↗</a>
+          <a class="plink" href="https://env-doctor-web.vercel.app" target="_blank" rel="noopener">Landing page ↗</a>
+        </div>
+      </div>
+      <div class="proj-visual">
+        <div class="vshot">$ <span class="w">npx @neerav34/env-doctor</span>
+
+<span class="d">Scanning 214 files…</span>
+<span class="g">✔</span> <span class="w">DATABASE_URL</span>      <span class="d">.env.example ✓</span>
+<span class="g">✔</span> <span class="w">REDIS_URL</span>         <span class="d">.env.example ✓</span>
+<span class="a">✖</span> <span class="w">STRIPE_KEY</span>        <span class="a">missing from .env.example</span>
+<span class="a">✖</span> <span class="w">GROQ_API_KEY</span>      <span class="a">used but undocumented</span>
+
+<span class="d">2 problems found — fix before deploy</span></div>
+      </div>
+    </article>
+
+  </section>
+
+  <section id="skills">
+    <div class="shell">
+      <div class="sec-head reveal">
+        <span class="sec-idx">03</span>
+        <h2>What I <em>work with</em></h2>
+        <span class="sec-rule"></span>
+      </div>
+    </div>
+    <div class="marquee reveal">
+      <div class="marquee-track" id="marqueeTrack">
+        <span><b>◆</b>RAG Pipelines</span><span><b>◆</b>LLM Orchestration</span><span><b>◆</b>FastAPI</span><span><b>◆</b>Vector Databases</span><span><b>◆</b>System Design</span><span><b>◆</b>Redis</span><span><b>◆</b>OAuth 2.0</span><span><b>◆</b>Async Python</span><span><b>◆</b>Node.js</span><span><b>◆</b>Docker</span>
+      </div>
+    </div>
+    <div class="shell">
+      <div class="skill-grid reveal">
+        <div class="skill-card">
+          <h4>Languages</h4>
+          <div class="chips"><span class="chip">Python</span><span class="chip">JavaScript</span><span class="chip">Java</span><span class="chip">C++</span><span class="chip">C</span><span class="chip">SQL</span></div>
+        </div>
+        <div class="skill-card">
+          <h4>Backend</h4>
+          <div class="chips"><span class="chip">FastAPI</span><span class="chip">Flask</span><span class="chip">Node.js</span><span class="chip">Express.js</span><span class="chip">REST API Design</span><span class="chip">OAuth 2.0</span></div>
+        </div>
+        <div class="skill-card">
+          <h4>AI / LLM &amp; Systems</h4>
+          <div class="chips"><span class="chip">RAG Pipelines</span><span class="chip">LLM Orchestration</span><span class="chip">Vector DBs</span><span class="chip">System Design</span><span class="chip">Async / Concurrency</span></div>
+        </div>
+        <div class="skill-card">
+          <h4>Data &amp; Infra</h4>
+          <div class="chips"><span class="chip">MongoDB</span><span class="chip">PostgreSQL</span><span class="chip">MySQL</span><span class="chip">Redis</span><span class="chip">SQLite</span><span class="chip">Docker</span><span class="chip">AWS</span><span class="chip">Git</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="shell" id="proof">
+    <div class="sec-head reveal">
+      <span class="sec-idx">04</span>
+      <h2>Proof of <em>work</em></h2>
+      <span class="sec-rule"></span>
+    </div>
+    <div class="duo reveal">
+      <div class="panel">
+        <h3>Numbers that don't lie</h3>
+        <div class="proof-row">
+          <span class="proof-num">1,100+</span>
+          <span class="proof-txt"><b>LeetCode problems solved</b> — plus 5★ Python rating on HackerRank and 1,000+ problems across platforms.</span>
+        </div>
+        <div class="proof-row">
+          <span class="proof-num">−87%</span>
+          <span class="proof-txt"><b>Production latency cut</b> — diagnosed per-request TLS handshakes, fixed with a shared connection pool, verified under load.</span>
+        </div>
+        <div class="proof-row">
+          <span class="proof-num">1,500+</span>
+          <span class="proof-txt"><b>npm downloads</b> of env-doctor across 10 releases — with CI, a GitHub Action, and a landing page kept in sync on every release.</span>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Education</h3>
+        <div class="edu-deg">B.Tech — Computer Science &amp; Engineering</div>
+        <div class="edu-line">HNB Garhwal University (A Central University)</div>
+        <div class="edu-meta">SRINAGAR, UTTARAKHAND · GRADUATED AUG 2024</div>
+        <span class="gpa">CGPA 8.0 / 10</span>
+        <h3 style="margin-top:38px">How I work</h3>
+        <p class="proof-txt">I measure before I claim. Every performance number on this page came from a load test I wrote, and every project links to something you can run right now.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <div class="shell">
+      <p class="eyebrow reveal in" style="color:var(--amber)">05 — LET'S BUILD SOMETHING</p>
+      <a class="mail mailme" href="mailto:neeravjha444@gmail.com?subject=Opportunity%20for%20Neerav%20%E2%80%94%20%5BCompany%20%2F%20Role%5D&amp;body=Hi%20Neerav%2C%0A%0ACame%20across%20your%20portfolio%20and%20would%20love%20to%20talk%20about%20a%20role%20at%20%5BCompany%5D.%0A%0A">neeravjha444@gmail.com</a>
+      <p class="contact-sub">Open to Software Engineer / SDE roles — India or remote. If you got this far, the fastest way to know if I'm your engineer is a 30-minute call.</p>
+      <div class="contact-links">
+        <a class="btn btn-ghost" href="https://github.com/neerav34" target="_blank" rel="noopener">GitHub</a>
+        <a class="btn btn-ghost" href="https://www.linkedin.com/in/neerav-jha" target="_blank" rel="noopener">LinkedIn</a>
+        <a class="btn btn-ghost" href="https://drive.google.com/file/d/1h-w5dZftKcPxryhzdudBlT-FsQ2AFgkQ/view" target="_blank" rel="noopener">Resume ↓</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot-in">
+      <span>© 2026 NEERAV JHA — NOIDA, IN</span>
+      <span>DESIGNED &amp; BUILT BY HAND · NO TEMPLATES</span>
+    </div>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</div>
+
+<script>
+(function () {
+  var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* ---- ambient network mesh ---- */
+  var canvas = document.getElementById("mesh");
+  var ctx = canvas.getContext("2d");
+  var W, H, nodes = [], packets = [];
+  var LINK_DIST = 170;
+
+  function resize() {
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
+    var count = Math.min(70, Math.floor(W * H / 22000));
+    nodes = [];
+    for (var i = 0; i < count; i++) {
+      nodes.push({
+        x: Math.random() * W,
+        y: Math.random() * H,
+        vx: (Math.random() - 0.5) * 0.28,
+        vy: (Math.random() - 0.5) * 0.28,
+        r: Math.random() * 1.6 + 0.6
+      });
+    }
+  }
+  resize();
+  window.addEventListener("resize", resize);
+
+  function spawnPacket() {
+    if (nodes.length < 2 || packets.length > 5) return;
+    var a = nodes[Math.floor(Math.random() * nodes.length)];
+    var best = null, bd = Infinity;
+    for (var i = 0; i < nodes.length; i++) {
+      var n = nodes[i];
+      if (n === a) continue;
+      var d = Math.hypot(n.x - a.x, n.y - a.y);
+      if (d < bd && d < LINK_DIST) { bd = d; best = n; }
+    }
+    if (best) packets.push({ a: a, b: best, t: 0, teal: Math.random() > 0.5 });
+  }
+
+  function tick() {
+    ctx.clearRect(0, 0, W, H);
+    for (var i = 0; i < nodes.length; i++) {
+      var n = nodes[i];
+      n.x += n.vx; n.y += n.vy;
+      if (n.x < 0 || n.x > W) n.vx *= -1;
+      if (n.y < 0 || n.y > H) n.vy *= -1;
+    }
+    for (var i = 0; i < nodes.length; i++) {
+      for (var j = i + 1; j < nodes.length; j++) {
+        var a = nodes[i], b = nodes[j];
+        var d = Math.hypot(a.x - b.x, a.y - b.y);
+        if (d < LINK_DIST) {
+          ctx.strokeStyle = "rgba(90, 110, 150," + (0.16 * (1 - d / LINK_DIST)) + ")";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y);
+          ctx.lineTo(b.x, b.y);
+          ctx.stroke();
+        }
+      }
+    }
+    for (var i = 0; i < nodes.length; i++) {
+      var n = nodes[i];
+      ctx.fillStyle = "rgba(140, 160, 200, 0.55)";
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    if (Math.random() < 0.03) spawnPacket();
+    for (var i = packets.length - 1; i >= 0; i--) {
+      var p = packets[i];
+      p.t += 0.018;
+      if (p.t >= 1) { packets.splice(i, 1); continue; }
+      var x = p.a.x + (p.b.x - p.a.x) * p.t;
+      var y = p.a.y + (p.b.y - p.a.y) * p.t;
+      ctx.fillStyle = p.teal ? "rgba(95, 212, 196, 0.9)" : "rgba(240, 160, 60, 0.9)";
+      ctx.shadowColor = p.teal ? "#5fd4c4" : "#f0a03c";
+      ctx.shadowBlur = 8;
+      ctx.beginPath();
+      ctx.arc(x, y, 2.1, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+    }
+    requestAnimationFrame(tick);
+  }
+  if (!reduced) tick();
+  else {
+    // static frame for reduced motion
+    for (var i = 0; i < nodes.length; i++) {
+      var n = nodes[i];
+      ctx.fillStyle = "rgba(140, 160, 200, 0.4)";
+      ctx.beginPath();
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  /* ---- typed eyebrow ---- */
+  var roles = [
+    "SOFTWARE ENGINEER @ YELLOW.AI",
+    "LLM ORCHESTRATION & RAG PIPELINES",
+    "BACKEND & DISTRIBUTED SYSTEMS",
+    "I SHIP. TO NPM, TO PROD, TO USERS."
+  ];
+  var typedEl = document.getElementById("typed");
+  if (reduced) {
+    typedEl.textContent = roles[0];
+  } else {
+    var ri = 0, ci = 0, deleting = false;
+    function typeLoop() {
+      var word = roles[ri];
+      if (!deleting) {
+        ci++;
+        typedEl.textContent = word.slice(0, ci);
+        if (ci === word.length) { deleting = true; setTimeout(typeLoop, 2100); return; }
+        setTimeout(typeLoop, 46);
+      } else {
+        ci--;
+        typedEl.textContent = word.slice(0, ci);
+        if (ci === 0) { deleting = false; ri = (ri + 1) % roles.length; setTimeout(typeLoop, 360); return; }
+        setTimeout(typeLoop, 22);
+      }
+    }
+    setTimeout(typeLoop, 700);
+  }
+
+  /* ---- hero terminal ---- */
+  var script = [
+    { t: "cmd", text: "npx @neerav34/env-doctor" },
+    { t: "ok",  text: "✔ published on npm · v1.0.10" },
+    { t: "dim", text: "  catches missing env vars before prod" },
+    { t: "gap" },
+    { t: "cmd", text: "curl llm-gateway-rb0k.onrender.com/v1/usage" },
+    { t: "ok",  text: "✔ live · p50 473ms · 10.3 req/s" },
+    { t: "dim", text: "  X-Cache: SEMANTIC-HIT (sim 0.93)" },
+    { t: "gap" },
+    { t: "cmd", text: "kill -9 taskq-worker-1  # mid-job" },
+    { t: "ok",  text: "✔ job rescued by worker-2 · 0 lost" },
+    { t: "dim", text: "  distributed queue · 520 req/s" },
+    { t: "gap" },
+    { t: "cmd", text: "whoami" },
+    { t: "ok",  text: "neerav — engineer who measures, then ships" }
+  ];
+  var termBody = document.getElementById("termBody");
+
+  function renderLine(item, partial) {
+    if (item.t === "gap") return "\n";
+    var text = partial !== undefined ? partial : item.text;
+    if (item.t === "cmd") return '<span class="t-prompt">$ </span><span class="t-cmd">' + text + "</span>\n";
+    if (item.t === "ok") return '<span class="t-ok">' + text + "</span>\n";
+    return '<span class="t-dim">' + text + "</span>\n";
+  }
+
+  if (reduced) {
+    termBody.innerHTML = script.map(function (s) { return renderLine(s); }).join("");
+  } else {
+    var li = 0, done = "";
+    function termLoop() {
+      if (li >= script.length) {
+        setTimeout(function () { li = 0; done = ""; termBody.innerHTML = '<span class="t-caret"></span>'; setTimeout(termLoop, 600); }, 5200);
+        return;
+      }
+      var item = script[li];
+      if (item.t === "gap") {
+        done += "\n";
+        termBody.innerHTML = done + '<span class="t-caret"></span>';
+        li++;
+        setTimeout(termLoop, 240);
+        return;
+      }
+      if (item.t === "cmd") {
+        var k = 0;
+        (function typeCmd() {
+          k++;
+          termBody.innerHTML = done + renderLine(item, item.text.slice(0, k)).replace(/\n$/, "") + '<span class="t-caret"></span>';
+          if (k < item.text.length) { setTimeout(typeCmd, 34); }
+          else {
+            done += renderLine(item);
+            li++;
+            setTimeout(termLoop, 420);
+          }
+        })();
+      } else {
+        done += renderLine(item);
+        termBody.innerHTML = done + '<span class="t-caret"></span>';
+        li++;
+        setTimeout(termLoop, item.t === "ok" ? 340 : 220);
+      }
+    }
+    setTimeout(termLoop, 1500);
+  }
+
+  /* ---- scroll reveals ---- */
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add("in");
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll(".reveal, .xp").forEach(function (el) { io.observe(el); });
+
+  /* ---- counters ---- */
+  function animateCount(el) {
+    var to = parseFloat(el.dataset.to);
+    var dec = parseInt(el.dataset.dec || "0", 10);
+    if (reduced) { el.textContent = to.toLocaleString("en-IN", { minimumFractionDigits: dec, maximumFractionDigits: dec }); return; }
+    var t0 = null, dur = 1600;
+    function step(ts) {
+      if (!t0) t0 = ts;
+      var p = Math.min(1, (ts - t0) / dur);
+      var eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = (to * eased).toLocaleString("en-IN", { minimumFractionDigits: dec, maximumFractionDigits: dec });
+      if (p < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+  var cio = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll(".count").forEach(animateCount);
+        cio.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.4 });
+  var m = document.querySelector(".metrics");
+  if (m) cio.observe(m);
+
+  /* ---- latency bars ---- */
+  var bio = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll(".bar-fill").forEach(function (b) {
+          b.style.width = b.dataset.w + "%";
+        });
+        bio.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.35 });
+  var viz = document.getElementById("latencyViz");
+  if (viz) bio.observe(viz);
+
+  /* ---- email: copy-to-clipboard fallback ---- */
+  var EMAIL = "neeravjha444@gmail.com";
+  var toast = document.getElementById("toast");
+  var toastTimer;
+  function showToast(copied) {
+    toast.innerHTML = copied
+      ? "<b>✓</b> " + EMAIL + " copied to clipboard"
+      : "email me at <b>" + EMAIL + "</b>";
+    toast.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toast.classList.remove("show"); }, 3200);
+  }
+  document.querySelectorAll(".mailme").forEach(function (a) {
+    a.addEventListener("click", function () {
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(EMAIL).then(
+          function () { showToast(true); },
+          function () { showToast(false); }
+        );
+      } else {
+        showToast(false);
+      }
+    });
+  });
+
+  /* ---- marquee duplicate for seamless loop ---- */
+  var track = document.getElementById("marqueeTrack");
+  if (track) track.innerHTML += track.innerHTML;
+})();
+</script>
+
+</html>
