@@ -797,6 +797,35 @@
 
     <article class="proj reveal">
       <div class="proj-info">
+        <span class="proj-tag">Scan it yourself · Live in production</span>
+        <h3>QRDrop</h3>
+        <div class="proj-stack">Next.js · WebRTC · Socket.io · Service Worker (PWA)</div>
+        <p>Send a file between any two devices by scanning a QR code — it streams straight browser-to-browser over an encrypted WebRTC data channel. <b>No upload, no cloud storage, no account.</b> Works Android → iPhone → laptop, the exact gap AirDrop and Quick Share leave open.</p>
+        <ul class="proj-points">
+          <li><b>Survives real interruptions</b> — screen-wake lock, resume tokens, and byte-exact reconnection: killing a live link mid-file and re-verifying by sha256 is a CI test, not a hope.</li>
+          <li>Optional 6-digit <b>PIN gates the file manifest itself</b>, not just the bytes — a locked join leaks nothing, and a hard attempt limit (not the hashing) is the real defense.</li>
+          <li><b>152 checks across 8 test suites</b> — protocol, PIN, TURN, PWA, and real two-Chrome-tab transfers — plus a TURN relay fallback for networks that block direct P2P.</li>
+        </ul>
+        <div class="proj-links">
+          <a class="plink" href="https://github.com/neerav34/qrdrop" target="_blank" rel="noopener">GitHub ↗</a>
+          <a class="plink" href="https://qrdrop-seven.vercel.app" target="_blank" rel="noopener">Live — scan with your phone ↗</a>
+        </div>
+        <div class="proj-note">※ free-tier hosting sleeps when idle — first request may take ~30s to wake (page pings it the moment you open it)</div>
+      </div>
+      <div class="proj-visual">
+        <div class="vshot">$ <span class="w">npm run test:e2e</span>
+
+<span class="g">✔</span> 3MB transfer <span class="d">· sha256 verified</span>
+<span class="g">✔</span> 64MB <span class="d">· link cut mid-flight ·</span> <span class="w">resumed</span>
+<span class="g">✔</span> 4 files, 1 session <span class="d">· each sha256 verified</span>
+<span class="g">✔</span> PIN-gated transfer <span class="d">· verified</span>
+<span class="d">──────────────────────────────</span>
+<span class="g">✔</span> <span class="w">152 checks</span> · 8 suites · <span class="a">0 flaky</span></div>
+      </div>
+    </article>
+
+    <article class="proj reveal">
+      <div class="proj-info">
         <span class="proj-tag">Featured · Live in production</span>
         <h3>LLM Gateway</h3>
         <div class="proj-stack">Python · FastAPI · Redis · Vector DB · SQLite · SSE</div>
@@ -1117,6 +1146,10 @@ $ <span class="w">python -m loadtest.enqueue_load</span>
 
   /* ---- hero terminal ---- */
   var script = [
+    { t: "cmd", text: "open qrdrop-seven.vercel.app  # scan & send" },
+    { t: "ok",  text: "✔ WebRTC P2P · 152 checks · 8 suites" },
+    { t: "dim", text: "  Android → iPhone → laptop, no upload" },
+    { t: "gap" },
     { t: "cmd", text: "npx @neerav34/env-doctor" },
     { t: "ok",  text: "✔ published on npm · v1.0.10" },
     { t: "dim", text: "  catches missing env vars before prod" },
