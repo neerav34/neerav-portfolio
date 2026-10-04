@@ -914,6 +914,34 @@
 
     <article class="proj reveal">
       <div class="proj-info">
+        <span class="proj-tag">Self-hosted-first SaaS · Live demo + published CLI</span>
+        <h3>API Drift Monitor</h3>
+        <div class="proj-stack">Next.js · Supabase (Postgres + RLS) · npm CLI · MCP</div>
+        <p>Catches when an API — or an MCP server's tool list — silently changes shape, by diffing live responses against a learned baseline or spec and alerting on Slack, Discord, or email the moment something drifts.</p>
+        <ul class="proj-points">
+          <li><b>Self-hosted by default</b> — the published CLI runs on your own CI minutes with your own repo secrets; only the diff result ever crosses the network, never your credentials.</li>
+          <li><b>Team access done properly</b> — owner-or-collaborator permissions on every row, including a genuine Postgres RLS edge case (a freshly-inserted row isn't visible to a same-statement nested query, regardless of function volatility) isolated empirically and fixed rather than papered over.</li>
+          <li>One codebase covers OpenAPI, a learned-baseline mode for undocumented APIs, and MCP server monitoring — plus an embeddable status badge for any README.</li>
+        </ul>
+        <div class="proj-links">
+          <a class="plink" href="https://github.com/neerav34/api-drift-monitor" target="_blank" rel="noopener">GitHub ↗</a>
+          <a class="plink" href="https://api-drift-monitor.vercel.app/demo" target="_blank" rel="noopener">Live demo ↗</a>
+          <a class="plink" href="https://www.npmjs.com/package/api-drift-check" target="_blank" rel="noopener">npm ↗</a>
+        </div>
+      </div>
+      <div class="proj-visual">
+        <div class="vshot">$ <span class="w">npx api-drift-check run</span>
+
+<span class="d">Checking 6 endpoints against baseline…</span>
+<span class="g">✔</span> GET /users/1       <span class="d">ok</span>
+<span class="a">✖</span> GET /orders/5      <span class="w">status</span>: enum → string
+<span class="d">──────────────────────────────</span>
+<span class="a">✖</span> <span class="w">1 drift detected</span> · alert sent → Slack</div>
+      </div>
+    </article>
+
+    <article class="proj reveal">
+      <div class="proj-info">
         <span class="proj-tag">Featured · Live in production</span>
         <h3>LLM Gateway</h3>
         <div class="proj-stack">Python · FastAPI · Redis · Vector DB · SQLite · SSE</div>
@@ -1348,6 +1376,8 @@ $ <span class="w">python -m loadtest.enqueue_load</span>
   var PROJECTS_HTML =
     '<span class="t-ok">qrdrop</span>       P2P file transfer over WebRTC, scan a QR &amp; send\n' +
     '              → <a href="https://qrdrop-seven.vercel.app" target="_blank" rel="noopener">qrdrop-seven.vercel.app</a>\n\n' +
+    '<span class="t-ok">api-drift-monitor</span>  Self-hosted-first API/MCP drift detector, npm CLI\n' +
+    '              → <a href="https://api-drift-monitor.vercel.app/demo" target="_blank" rel="noopener">live demo</a>\n\n' +
     '<span class="t-ok">llm-gateway</span>  Multi-provider LLM router, 3.8s → 473ms p50\n' +
     '              → <a href="https://llm-gateway-rb0k.onrender.com" target="_blank" rel="noopener">llm-gateway-rb0k.onrender.com</a>\n\n' +
     '<span class="t-ok">taskq</span>        Distributed task queue, survives kill -9\n' +
@@ -1369,10 +1399,11 @@ $ <span class="w">python -m loadtest.enqueue_load</span>
     '<span class="t-ok">Data/Infra</span>  MongoDB · PostgreSQL · MySQL · Redis · SQLite · Docker · AWS\n\n';
 
   var LATEST_HTML =
-    '<span class="t-dim">Latest ship:</span> <span class="t-ok">QRDrop</span> — peer-to-peer file transfer over WebRTC.\n' +
-    'Scan a QR code, send a file straight between two browsers. No\n' +
-    'upload, no account. 152 checks across 8 test suites.\n\n' +
-    '→ <a href="https://qrdrop-seven.vercel.app" target="_blank" rel="noopener">qrdrop-seven.vercel.app</a>\n\n';
+    '<span class="t-dim">Latest ship:</span> <span class="t-ok">API Drift Monitor</span> — self-hosted-first drift\n' +
+    'detection for APIs and MCP servers, published as a real npm CLI.\n' +
+    'Just added team/collaborator support, including a genuine Postgres\n' +
+    'RLS edge case isolated and fixed rather than papered over.\n\n' +
+    '→ <a href="https://api-drift-monitor.vercel.app/demo" target="_blank" rel="noopener">api-drift-monitor.vercel.app/demo</a>\n\n';
 
   var CONTACT_HTML =
     '<span class="t-ok">email</span>     ' + EMAIL + '   <span class="t-dim">(type hire to open a pre-filled email)</span>\n' +
