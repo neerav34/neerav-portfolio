@@ -18,6 +18,7 @@
     --amber-soft: #f0a03c2b;
     --teal: #5fd4c4;
     --teal-soft: #5fd4c422;
+    --danger: #ff6b6b;
     --serif: "Charter", "Georgia", "Times New Roman", serif;
     --sans: system-ui, -apple-system, "Segoe UI", sans-serif;
     --mono: ui-monospace, "SF Mono", "Menlo", "Consolas", monospace;
@@ -60,6 +61,16 @@
   .wrap { position: relative; z-index: 2; }
   .shell { max-width: 1180px; margin: 0 auto; padding: 0 28px; }
 
+  .progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 0%;
+    height: 2px;
+    background: linear-gradient(90deg, var(--amber), var(--teal));
+    z-index: 60;
+    box-shadow: 0 0 10px #f0a03c55;
+  }
+
   /* ---------- nav ---------- */
   nav {
     position: fixed;
@@ -93,8 +104,16 @@
     font-size: 12.5px;
     letter-spacing: 0.08em;
   }
-  .nav-links a { color: var(--muted); transition: color 0.25s; }
+  .nav-links a { color: var(--muted); transition: color 0.25s; position: relative; }
   .nav-links a:hover { color: var(--amber); }
+  .nav-links a.active { color: var(--text); }
+  .nav-links a.active::after {
+    content: "";
+    position: absolute;
+    bottom: -6px; left: 0; right: 0;
+    height: 1px;
+    background: var(--amber);
+  }
   .nav-cta {
     font-family: var(--mono);
     font-size: 12.5px;
@@ -112,6 +131,7 @@
     .nav-in { gap: 12px; }
     .brand { flex-shrink: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; }
     .nav-cta { margin-left: auto; flex-shrink: 0; font-size: 11px; padding: 7px 12px; white-space: nowrap; }
+    .term-input { font-size: 16px; }
   }
 
   /* ---------- hero ---------- */
@@ -227,6 +247,12 @@
     overflow: hidden;
     opacity: 0;
     animation: termIn 1s cubic-bezier(0.19, 1, 0.22, 1) 0.55s forwards;
+    cursor: text;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  .term.interactive {
+    border-color: #f0a03c66;
+    box-shadow: 0 30px 80px #00000080, 0 0 0 1px #ffffff08 inset, 0 0 40px #f0a03c1a;
   }
   @keyframes termIn { from { opacity: 0; transform: translateY(28px) scale(0.97); } to { opacity: 1; transform: none; } }
   .term-bar {
@@ -249,18 +275,27 @@
     letter-spacing: 0.06em;
   }
   .term-body {
-    padding: 20px 20px 24px;
+    padding: 20px 20px 8px;
     font-family: var(--mono);
     font-size: 13px;
     line-height: 1.85;
     min-height: 300px;
+    max-height: 480px;
+    overflow-y: auto;
     white-space: pre-wrap;
     word-break: break-word;
+    scrollbar-width: thin;
+    scrollbar-color: var(--line) transparent;
   }
+  .term-body::-webkit-scrollbar { width: 6px; }
+  .term-body::-webkit-scrollbar-thumb { background: var(--line); border-radius: 3px; }
+  .term-body a { color: var(--teal); text-decoration: underline; text-decoration-color: #5fd4c455; text-underline-offset: 2px; }
+  .term-body a:hover { text-decoration-color: var(--teal); }
   .t-prompt { color: var(--amber); }
   .t-cmd { color: var(--text); }
   .t-ok { color: var(--teal); }
   .t-dim { color: var(--faint); }
+  .t-err { color: var(--danger); }
   .t-caret {
     display: inline-block;
     width: 8px; height: 14px;
@@ -268,6 +303,28 @@
     vertical-align: -2px;
     animation: blink 1s steps(1) infinite;
   }
+  .term-input-row {
+    display: none;
+    align-items: center;
+    padding: 8px 20px 18px;
+    font-family: var(--mono);
+    font-size: 13px;
+    gap: 8px;
+    border-top: 1px solid #22304944;
+  }
+  .term-input-row .prompt-sym { color: var(--amber); flex-shrink: 0; }
+  .term-input {
+    flex: 1;
+    min-width: 0;
+    background: transparent;
+    border: none;
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 13px;
+    outline: none;
+    padding: 0;
+  }
+  .term-input::placeholder { color: var(--faint); font-style: italic; }
 
   /* ---------- metrics strip ---------- */
   .metrics {
@@ -406,6 +463,17 @@
     transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.35s, border-color 0.35s;
   }
   .proj:hover { transform: translateY(-6px); border-color: #f0a03c66; box-shadow: 0 26px 70px #00000073, 0 0 44px #f0a03c14; }
+  .proj::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(560px circle at var(--mx, 50%) var(--my, 50%), #f0a03c1c, transparent 42%);
+    opacity: 0;
+    transition: opacity 0.4s;
+    pointer-events: none;
+  }
+  .proj:hover::before { opacity: 1; }
+  .proj-info, .proj-visual { position: relative; z-index: 1; }
   @media (max-width: 900px) { .proj { grid-template-columns: 1fr; } }
   .proj-info { padding: 44px 44px 40px; min-width: 0; }
   @media (max-width: 600px) { .proj-info { padding: 30px 24px; } }
@@ -535,7 +603,20 @@
     background: #0e1522a6;
     transition: transform 0.3s, border-color 0.3s;
     min-width: 0;
+    position: relative;
+    overflow: hidden;
   }
+  .skill-card::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(220px circle at var(--mx, 50%) var(--my, 50%), #5fd4c416, transparent 55%);
+    opacity: 0;
+    transition: opacity 0.35s;
+    pointer-events: none;
+  }
+  .skill-card:hover::before { opacity: 1; }
+  .skill-card > * { position: relative; z-index: 1; }
   .skill-card:hover { transform: translateY(-4px); border-color: #5fd4c466; }
   .skill-card h4 {
     font-family: var(--mono);
@@ -667,6 +748,7 @@
   }
 </style>
 
+<div class="progress-bar" id="progressBar"></div>
 <canvas id="mesh"></canvas>
 <div class="grain"></div>
 
@@ -675,10 +757,10 @@
     <div class="nav-in">
       <a class="brand" href="#top"><b>neerav</b>@jha:<span style="color:var(--teal)">~</span>$</a>
       <div class="nav-links">
-        <a href="#work">WORK</a>
-        <a href="#projects">PROJECTS</a>
-        <a href="#skills">SKILLS</a>
-        <a href="#proof">PROOF</a>
+        <a href="#work" data-section="work">WORK</a>
+        <a href="#projects" data-section="projects">PROJECTS</a>
+        <a href="#skills" data-section="skills">SKILLS</a>
+        <a href="#proof" data-section="proof">PROOF</a>
         <a href="/resume.pdf" target="_blank" rel="noopener" style="color:var(--teal)">RESUME ↗</a>
       </div>
       <a class="nav-cta mailme" href="mailto:neeravjha444@gmail.com?subject=Opportunity%20for%20Neerav%20%E2%80%94%20%5BCompany%20%2F%20Role%5D&amp;body=Hi%20Neerav%2C%0A%0ACame%20across%20your%20portfolio%20and%20would%20love%20to%20talk%20about%20a%20role%20at%20%5BCompany%5D.%0A%0A">HIRE ME →</a>
@@ -709,12 +791,16 @@
           <span>ships to npm &amp; production</span>
         </div>
       </div>
-      <div class="term" aria-label="Terminal demo of Neerav's projects">
+      <div class="term" id="term" aria-label="Interactive terminal — click, or press slash, to try commands">
         <div class="term-bar">
           <span class="dot"></span><span class="dot"></span><span class="dot"></span>
-          <span class="term-title">neerav — zsh — things I actually shipped</span>
+          <span class="term-title" id="termTitle">neerav — zsh — click to interact, or press /</span>
         </div>
         <div class="term-body" id="termBody"></div>
+        <div class="term-input-row" id="termInputRow">
+          <span class="prompt-sym">$</span>
+          <input class="term-input" id="termInput" type="text" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off" placeholder="type a command… try: help">
+        </div>
       </div>
     </div>
   </header>
@@ -1022,6 +1108,9 @@ $ <span class="w">python -m loadtest.enqueue_load</span>
 <script>
 (function () {
   var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  var EMAIL = "neeravjha444@gmail.com";
+  var MAILTO = "mailto:neeravjha444@gmail.com?subject=Opportunity%20for%20Neerav%20%E2%80%94%20%5BCompany%20%2F%20Role%5D&body=Hi%20Neerav%2C%0A%0ACame%20across%20your%20portfolio%20and%20would%20love%20to%20talk%20about%20a%20role%20at%20%5BCompany%5D.%0A%0A";
+  var interactive = false;
 
   /* ---- ambient network mesh ---- */
   var canvas = document.getElementById("mesh");
@@ -1183,8 +1272,9 @@ $ <span class="w">python -m loadtest.enqueue_load</span>
   } else {
     var li = 0, done = "";
     function termLoop() {
+      if (interactive) return;
       if (li >= script.length) {
-        setTimeout(function () { li = 0; done = ""; termBody.innerHTML = '<span class="t-caret"></span>'; setTimeout(termLoop, 600); }, 5200);
+        setTimeout(function () { if (interactive) return; li = 0; done = ""; termBody.innerHTML = '<span class="t-caret"></span>'; setTimeout(termLoop, 600); }, 5200);
         return;
       }
       var item = script[li];
@@ -1198,6 +1288,7 @@ $ <span class="w">python -m loadtest.enqueue_load</span>
       if (item.t === "cmd") {
         var k = 0;
         (function typeCmd() {
+          if (interactive) return;
           k++;
           termBody.innerHTML = done + renderLine(item, item.text.slice(0, k)).replace(/\n$/, "") + '<span class="t-caret"></span>';
           if (k < item.text.length) { setTimeout(typeCmd, 34); }
@@ -1216,6 +1307,235 @@ $ <span class="w">python -m loadtest.enqueue_load</span>
     }
     setTimeout(termLoop, 1500);
   }
+
+  /* ---- interactive terminal ---- */
+  var term = document.getElementById("term");
+  var termTitle = document.getElementById("termTitle");
+  var termInputRow = document.getElementById("termInputRow");
+  var termInput = document.getElementById("termInput");
+
+  function escapeHtml(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  function appendOutput(html) {
+    termBody.innerHTML += html;
+    termBody.scrollTop = termBody.scrollHeight;
+  }
+
+  var HELP_HTML =
+    '<span class="t-dim">Available commands:</span>\n\n' +
+    '  <span class="t-ok">whoami</span>        who I am\n' +
+    '  <span class="t-ok">projects</span>      what I’ve shipped\n' +
+    '  <span class="t-ok">experience</span>    where I’ve worked\n' +
+    '  <span class="t-ok">stack</span>         languages &amp; tools\n' +
+    '  <span class="t-ok">latest</span>        most recent ship\n' +
+    '  <span class="t-ok">metrics</span>       the numbers that matter\n' +
+    '  <span class="t-ok">contact</span>       how to reach me\n' +
+    '  <span class="t-ok">social</span>        github / linkedin / medium\n' +
+    '  <span class="t-ok">resume</span>        open my resume\n' +
+    '  <span class="t-ok">hire</span>          you know why you’re here\n' +
+    '  <span class="t-ok">ls</span>            list files\n' +
+    '  <span class="t-ok">cat</span> &lt;file&gt;     read a file\n' +
+    '  <span class="t-ok">clear</span>         clear the screen\n\n' +
+    '<span class="t-dim">↑ / ↓ browse history · Ctrl+L clears · press / anywhere on the page to jump here</span>\n\n';
+
+  var WHOAMI_HTML =
+    '<span class="t-ok">neerav jha</span>\n' +
+    '<span class="t-dim">Software Engineer @ Yellow.ai — LLM orchestration, RAG pipelines,\n' +
+    'distributed systems. I find production bottlenecks and kill them.\n' +
+    'Based in Noida, India. Open to SWE / SDE roles.</span>\n\n';
+
+  var PROJECTS_HTML =
+    '<span class="t-ok">qrdrop</span>       P2P file transfer over WebRTC, scan a QR &amp; send\n' +
+    '              → <a href="https://qrdrop-seven.vercel.app" target="_blank" rel="noopener">qrdrop-seven.vercel.app</a>\n\n' +
+    '<span class="t-ok">llm-gateway</span>  Multi-provider LLM router, 3.8s → 473ms p50\n' +
+    '              → <a href="https://llm-gateway-rb0k.onrender.com" target="_blank" rel="noopener">llm-gateway-rb0k.onrender.com</a>\n\n' +
+    '<span class="t-ok">taskq</span>        Distributed task queue, survives kill -9\n' +
+    '              → <a href="https://taskq-api-8orl.onrender.com/dashboard" target="_blank" rel="noopener">taskq dashboard</a>\n\n' +
+    '<span class="t-ok">env-doctor</span>   npm CLI, 1,500+ downloads, catches env var bugs\n' +
+    '              → <a href="https://www.npmjs.com/package/@neerav34/env-doctor" target="_blank" rel="noopener">npm package</a>\n\n' +
+    '<span class="t-dim">try: cat README.md</span>\n\n';
+
+  var EXPERIENCE_HTML =
+    '<span class="t-ok">Yellow.ai</span>            Associate Software Engineer   Sep 2024 — Present\n' +
+    '                     <span class="t-dim">(promoted from Intern, Mar 2025)</span>\n' +
+    '<span class="t-ok">Munsow Technologies</span>  Python Developer Intern       Jun 2024 — Nov 2024\n' +
+    '<span class="t-ok">NIELIT</span>               Data &amp; ML Intern              Jun 2023 — Aug 2023\n\n';
+
+  var STACK_HTML =
+    '<span class="t-ok">Languages</span>   Python · JavaScript · Java · C++ · C · SQL\n' +
+    '<span class="t-ok">Backend</span>     FastAPI · Flask · Node.js · Express.js · REST · OAuth 2.0\n' +
+    '<span class="t-ok">AI / LLM</span>    RAG pipelines · LLM orchestration · Vector DBs · Async/Concurrency\n' +
+    '<span class="t-ok">Data/Infra</span>  MongoDB · PostgreSQL · MySQL · Redis · SQLite · Docker · AWS\n\n';
+
+  var LATEST_HTML =
+    '<span class="t-dim">Latest ship:</span> <span class="t-ok">QRDrop</span> — peer-to-peer file transfer over WebRTC.\n' +
+    'Scan a QR code, send a file straight between two browsers. No\n' +
+    'upload, no account. 152 checks across 8 test suites.\n\n' +
+    '→ <a href="https://qrdrop-seven.vercel.app" target="_blank" rel="noopener">qrdrop-seven.vercel.app</a>\n\n';
+
+  var CONTACT_HTML =
+    '<span class="t-ok">email</span>     ' + EMAIL + '   <span class="t-dim">(type hire to open a pre-filled email)</span>\n' +
+    '<span class="t-ok">linkedin</span>  <a href="https://www.linkedin.com/in/neerav-jha" target="_blank" rel="noopener">linkedin.com/in/neerav-jha</a>\n' +
+    '<span class="t-ok">github</span>    <a href="https://github.com/neerav34" target="_blank" rel="noopener">github.com/neerav34</a>\n' +
+    '<span class="t-ok">medium</span>    <a href="https://medium.com/@neeravjha444" target="_blank" rel="noopener">medium.com/@neeravjha444</a>\n\n';
+
+  var SOCIAL_HTML =
+    '<a href="https://github.com/neerav34" target="_blank" rel="noopener">github.com/neerav34</a>\n' +
+    '<a href="https://www.linkedin.com/in/neerav-jha" target="_blank" rel="noopener">linkedin.com/in/neerav-jha</a>\n' +
+    '<a href="https://medium.com/@neeravjha444" target="_blank" rel="noopener">medium.com/@neeravjha444</a>\n\n';
+
+  var METRICS_HTML =
+    '<span class="t-ok">473ms</span>      llm-gateway p50 (was 3.8s)\n' +
+    '<span class="t-ok">5.4×</span>       throughput gain\n' +
+    '<span class="t-ok">1,100+</span>     LeetCode problems solved\n' +
+    '<span class="t-ok">1,500+</span>     npm downloads (env-doctor)\n' +
+    '<span class="t-ok">152</span>        qrdrop test checks, 8 suites\n' +
+    '<span class="t-ok">520 req/s</span>  taskq enqueue throughput\n\n';
+
+  var README_HTML =
+    '<span class="t-dim"># neerav jha\n\n' +
+    'Software Engineer at Yellow.ai. I build things that work under\n' +
+    'load and admit what they don’t do — see taskq’s honesty about\n' +
+    'at-least-once delivery. This terminal is real: no LLM behind it,\n' +
+    'just hardcoded commands, because I’d rather ship something small\n' +
+    'and correct than something impressive and flaky.\n\n' +
+    'type help for commands.</span>\n\n';
+
+  var FILES = {
+    "readme.md": README_HTML,
+    "about.md": WHOAMI_HTML,
+    "experience.log": EXPERIENCE_HTML,
+    "skills.json": STACK_HTML,
+    "contact.sh": CONTACT_HTML
+  };
+
+  function printCommandLine(raw) {
+    appendOutput('<span class="t-prompt">$ </span><span class="t-cmd">' + escapeHtml(raw) + "</span>\n");
+  }
+
+  function runCommand(cmd) {
+    if (!cmd) return;
+    var lower = cmd.toLowerCase().trim();
+    var parts = cmd.trim().split(/\s+/);
+    var base = parts[0].toLowerCase();
+
+    if (base === "help" || lower === "?") {
+      appendOutput(HELP_HTML);
+    } else if (base === "whoami") {
+      appendOutput(WHOAMI_HTML);
+    } else if (base === "projects") {
+      appendOutput(PROJECTS_HTML);
+    } else if (base === "experience") {
+      appendOutput(EXPERIENCE_HTML);
+    } else if (base === "stack") {
+      appendOutput(STACK_HTML);
+    } else if (base === "latest") {
+      appendOutput(LATEST_HTML);
+    } else if (base === "contact") {
+      appendOutput(CONTACT_HTML);
+    } else if (base === "social") {
+      appendOutput(SOCIAL_HTML);
+    } else if (base === "metrics") {
+      appendOutput(METRICS_HTML);
+    } else if (base === "ls") {
+      appendOutput('<span class="t-ok">about.md  experience.log  projects/  skills.json  resume.pdf  contact.sh</span>\n\n');
+    } else if (base === "cat") {
+      var file = parts.slice(1).join(" ").toLowerCase();
+      if (!file) {
+        appendOutput('<span class="t-err">cat: missing file operand</span>\n\n');
+      } else if (file === "resume.pdf") {
+        appendOutput('<span class="t-err">cat: resume.pdf: binary file</span> <span class="t-dim">— try: resume</span>\n\n');
+      } else if (FILES[file]) {
+        appendOutput(FILES[file]);
+      } else {
+        appendOutput('<span class="t-err">cat: ' + escapeHtml(file) + ": No such file or directory</span>\n\n");
+      }
+    } else if (base === "date") {
+      appendOutput('<span class="t-dim">' + escapeHtml(new Date().toString()) + "</span>\n\n");
+    } else if (base === "echo") {
+      appendOutput('<span class="t-dim">' + escapeHtml(parts.slice(1).join(" ")) + "</span>\n\n");
+    } else if (base === "clear") {
+      termBody.innerHTML = "";
+    } else if (base === "resume") {
+      appendOutput('<span class="t-ok">opening resume.pdf…</span>\n\n');
+      window.open("/resume.pdf", "_blank");
+    } else if (lower === "sudo hire-me") {
+      appendOutput(
+        '<span class="t-dim">[sudo] password for recruiter: ********</span>\n' +
+        '<span class="t-dim">nice try — you don’t need root, just an inbox.</span>\n' +
+        '<span class="t-ok">permission granted. opening mail client…</span>\n\n'
+      );
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(EMAIL).then(function () { showToast(true); }, function () { showToast(false); });
+      }
+      window.location.href = MAILTO;
+    } else if (base === "hire") {
+      appendOutput('<span class="t-ok">opening a pre-filled email…</span>\n\n');
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(EMAIL).then(function () { showToast(true); }, function () { showToast(false); });
+      }
+      window.location.href = MAILTO;
+    } else if (lower === "coffee") {
+      appendOutput('<span class="t-dim">☕ brewing…</span>\n<span class="t-ok">✔ caffeine levels nominal. resuming work.</span>\n\n');
+    } else if (lower === "npm install neerav" || lower === "npm i neerav") {
+      appendOutput(
+        '<span class="t-dim">npm WARN this isn’t a real package (yet)</span>\n\n' +
+        '<span class="t-ok">+ neerav@1.0.0</span>\n' +
+        '<span class="t-dim">added 1 engineer in 1.2s</span>\n\n' +
+        '<span class="t-ok">✔ ready to ship</span>\n\n'
+      );
+    } else {
+      appendOutput('<span class="t-err">command not found: ' + escapeHtml(cmd) + "</span> " + '<span class="t-dim">— type help</span>\n\n');
+    }
+  }
+
+  function enterInteractive() {
+    if (interactive) { termInput.focus(); return; }
+    interactive = true;
+    term.classList.add("interactive");
+    termTitle.textContent = "neerav — zsh — interactive";
+    appendOutput('\n<span class="t-dim">— live shell activated. type </span><span class="t-ok">help</span><span class="t-dim"> to see what you can do —</span>\n\n');
+    termInputRow.style.display = "flex";
+    termInput.focus();
+  }
+
+  term.addEventListener("click", enterInteractive);
+
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "/" && document.activeElement !== termInput) {
+      e.preventDefault();
+      term.scrollIntoView({ behavior: reduced ? "auto" : "smooth", block: "center" });
+      enterInteractive();
+    }
+  });
+
+  var cmdHistory = [], histIdx = -1;
+  termInput.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      var raw = termInput.value;
+      var cmd = raw.trim();
+      termInput.value = "";
+      if (cmd) cmdHistory.push(cmd);
+      histIdx = -1;
+      printCommandLine(raw);
+      runCommand(cmd);
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      if (!cmdHistory.length) return;
+      histIdx = histIdx < 0 ? cmdHistory.length - 1 : Math.max(0, histIdx - 1);
+      termInput.value = cmdHistory[histIdx];
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (histIdx < 0) return;
+      histIdx++;
+      if (histIdx >= cmdHistory.length) { histIdx = -1; termInput.value = ""; }
+      else termInput.value = cmdHistory[histIdx];
+    } else if (e.key === "l" && e.ctrlKey) {
+      e.preventDefault();
+      termBody.innerHTML = "";
+    }
+  });
 
   /* ---- scroll reveals ---- */
   var io = new IntersectionObserver(function (entries) {
@@ -1269,7 +1589,6 @@ $ <span class="w">python -m loadtest.enqueue_load</span>
   if (viz) bio.observe(viz);
 
   /* ---- email: copy-to-clipboard fallback ---- */
-  var EMAIL = "neeravjha444@gmail.com";
   var toast = document.getElementById("toast");
   var toastTimer;
   function showToast(copied) {
@@ -1296,6 +1615,55 @@ $ <span class="w">python -m loadtest.enqueue_load</span>
   /* ---- marquee duplicate for seamless loop ---- */
   var track = document.getElementById("marqueeTrack");
   if (track) track.innerHTML += track.innerHTML;
+
+  /* ---- scroll progress bar ---- */
+  var progressBar = document.getElementById("progressBar");
+  var progressRaf = null;
+  function updateProgress() {
+    var h = document.documentElement;
+    var scrollTop = h.scrollTop || document.body.scrollTop;
+    var scrollHeight = (h.scrollHeight || document.body.scrollHeight) - h.clientHeight;
+    var pct = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
+    progressBar.style.width = pct + "%";
+  }
+  window.addEventListener("scroll", function () {
+    if (progressRaf) return;
+    progressRaf = requestAnimationFrame(function () { updateProgress(); progressRaf = null; });
+  }, { passive: true });
+  updateProgress();
+
+  /* ---- active nav link on scroll ---- */
+  var navLinks = document.querySelectorAll(".nav-links a[data-section]");
+  var sectionMap = {};
+  navLinks.forEach(function (a) { sectionMap[a.dataset.section] = a; });
+  var navObserver = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      var link = sectionMap[entry.target.id];
+      if (!link || !entry.isIntersecting) return;
+      navLinks.forEach(function (a) { a.classList.remove("active"); });
+      link.classList.add("active");
+    });
+  }, { rootMargin: "-40% 0px -55% 0px", threshold: 0 });
+  ["work", "projects", "skills", "proof"].forEach(function (id) {
+    var sec = document.getElementById(id);
+    if (sec) navObserver.observe(sec);
+  });
+
+  /* ---- cursor spotlight on cards ---- */
+  if (!reduced) {
+    document.querySelectorAll(".proj, .skill-card").forEach(function (el) {
+      var raf = null;
+      el.addEventListener("mousemove", function (e) {
+        if (raf) return;
+        raf = requestAnimationFrame(function () {
+          var r = el.getBoundingClientRect();
+          el.style.setProperty("--mx", (e.clientX - r.left) + "px");
+          el.style.setProperty("--my", (e.clientY - r.top) + "px");
+          raf = null;
+        });
+      });
+    });
+  }
 })();
 </script>
 
